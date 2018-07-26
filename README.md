@@ -13,7 +13,7 @@ The dataset used for this task is [Stanford Natural Language Inference (SNLI)](
 
 # Usage
 
-Download dataset from [Stanford Natural Language Inference](https://nlp.stanford.edu/projects/snli/), then move "snli_1.0_train.jsonl", "snli_1.0_dev.jsonl", "snli_1.0_test.jsonl" into "./SNLI/raw data".
+Download dataset from [Stanford Natural Language Inference](https://nlp.stanford.edu/projects/snli/), then move `snli_1.0_train.jsonl`, `snli_1.0_dev.jsonl`, `snli_1.0_test.jsonl` into `./SNLI/raw data`.
 
 ```com
 # move dataset to the right place
@@ -27,7 +27,7 @@ Data preprocessing for convert source data into an easy-to-use format.
 python3 Utils.py
 ```
 
-Default hyper-parameters have been stored in config file in the path of "./config/config.yaml".
+Default hyper-parameters have been stored in config file in the path of `./config/config.yaml`.
 
 Train model:
 
