@@ -29,7 +29,7 @@ python3 Utils.py
 
 Default hyper-parameters have been stored in config file in the path of `./config/config.yaml`.
 
-Train model:
+Training model:
 
 ```python
 python3 Train.py
