@@ -1,0 +1,40 @@
+# training hyper-parameters
+num_epochs : 300
+batch_size : 32
+dropout_keep_prob : 0.5
+clip_value : 10
+learning_rate : 0.0004
+l2 : 0.0
+seq_length : 100
+optimizer : adam
+early_stop_step : 5000
+
+# embeddings hyper-parameters
+threshold : 0
+embedding_size : 300
+embedding_normalize : 1
+
+# layers hyper-parameters
+hidden_size : 300
+attention_size : 300
+
+# report hyper-parameters
+eval_batch : 1000
+
+# IO path
+## embeddings
+vocab_path : ./SNLI/clean data/vocab.txt
+embedding_path : ./SNLI/clean data/embeddings.pkl
+
+## dataset
+trainset_path : ./SNLI/clean data/train.txt
+devset_path : ./SNLI/clean data/dev.txt
+testset_path : ./SNLI/clean data/test.txt
+
+## reports
+save_path : ./model/checkpoint
+best_path : ./model/bestval
+log_path : ./config/log/log
+
+## config
+config_path : ./config/config.yaml
