@@ -107,9 +107,14 @@ def build_vocab(dataPath, vocabPath, threshold = 0, lowercase = True):
             try:
                 if lowercase:
                     line = line.lower()
-                words = line.strip().split()
-                words = words[1:]
-                for word in list(words):
+                tempLine = line.strip().split('||')
+                l1 = tempLine[1][:-1]
+                l2 = tempLine[2][:-1]
+                words1 = l1.split(' ')
+                for word in list(words1):
+                    cnt[word] += 1
+                words2 = l2.split(' ')
+                for word in list(words2):
                     cnt[word] += 1
             except:
                 pass
@@ -185,7 +190,7 @@ def sentence2Index(dataPath, vocabDict, maxLen = 100, lowercase = True):
     s1Mask = np.asarray(s1Mask, np.int32)
     s2Mask = np.asarray(s2Mask, np.int32)
     labelList = np.asarray(labelList, np.int32)
-    return s1Pad, s1Mask, s2Pad, s2Mask, labelList
+    return s1Pad, s1MaskList, s2Pad, s2MaskList, labelList
 
 # generator : generate a batch of data
 def next_batch(premise, premise_mask, hypothesis, hypothesis_mask, y, batchSize = 64, shuffle = True):
