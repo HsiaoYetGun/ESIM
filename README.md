@@ -1,5 +1,5 @@
 # ESIM
-A Tensorflow implementation of Chen-Qian's **[Enhanced LSTM for Natural Language Inference](https://arxiv.org/pdf/1609.06038v3.pdf)** from ACL 2017.
+A Tensorflow implementation of Chen-Qian's **[Enhanced LSTM for Natural Language Inference](https://arxiv.org/abs/1609.06038)** from ACL 2016.
 
 # Dataset
 

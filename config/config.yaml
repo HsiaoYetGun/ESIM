@@ -7,7 +7,7 @@ learning_rate : 0.0004
 l2 : 0.0
 seq_length : 100
 optimizer : adam
-early_stop_step : 5000
+early_stop_step : 5000000
 
 # embeddings hyper-parameters
 threshold : 0
@@ -35,6 +35,7 @@ testset_path : ./SNLI/clean data/test.txt
 save_path : ./model/checkpoint
 best_path : ./model/bestval
 log_path : ./config/log/log
+tfboard_path : ./tensorboard
 
 ## config
 config_path : ./config/config.yaml
