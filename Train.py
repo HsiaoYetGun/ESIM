@@ -59,6 +59,15 @@ def train():
     if not os.path.exists(save_file_dir):
         os.makedirs(save_file_dir)
 
+    # for TensorBoard
+    print_log('Configuring TensorBoard and Saver ...', file=log)
+    if not os.path.exists(arg.tfboard_path):
+        os.makedirs(arg.tfboard_path)
+    tf.summary.scalar('loss', model.loss)
+    tf.summary.scalar('accuracy', model.acc)
+    merged_summary = tf.summary.merge_all()
+    writer = tf.summary.FileWriter(arg.tfboard_path)
+
     # init
     sess = tf.Session()
     sess.run(tf.global_variables_initializer(), {model.embed_matrix : embeddings})
@@ -81,12 +90,16 @@ def train():
         for batch in batches:
             batch_nums = len(batch[0])
             feed_dict = feed_data(*batch, arg.dropout_keep_prob)
-            _, batch_loss, batch_acc = sess.run([model.logits, model.loss, model.acc], feed_dict=feed_dict)
+            _, batch_loss, batch_acc = sess.run([model.train, model.loss, model.acc], feed_dict=feed_dict)
             total_loss += batch_loss * batch_nums
             total_acc += batch_acc * batch_nums
 
             # evaluta on devset
             if total_batch % arg.eval_batch == 0:
+                # write tensorboard scalar
+                s = sess.run(merged_summary, feed_dict=feed_dict)
+                writer.add_summary(s, total_batch)
+
                 feed_dict[model.dropout_keep_prob] = 1.0
                 loss_val, acc_val = evaluate(sess, premise_dev, premise_mask_dev, hypothesis_dev, hypothesis_mask_dev, y_dev)
 
@@ -103,7 +116,7 @@ def train():
 
                 # show batch training information
                 time_diff = get_time_diff(start_time)
-                msg = 'Epoch : {0:>3}, Batch : {1:>8}, Train Batch Loss : {2:>6.2}, Train Batch Acc : {3:>6.2%}, Dev Loss : {4:>6.2}, Dev Acc : {5:>6.2%}, Time : {6}'
+                msg = 'Epoch : {0:>3}, Batch : {1:>8}, Train Batch Loss : {2:>6.2}, Train Batch Acc : {3:>6.2%}, Dev Loss : {4:>6.2}, Dev Acc : {5:>6.2%}, Time : {6} {7}'
                 print_log(msg.format(epoch + 1, total_batch, batch_loss, batch_acc, loss_val, acc_val, time_diff, improved_flag))
 
             total_batch += 1
@@ -123,7 +136,6 @@ def train():
 if __name__ == '__main__':
     # read config
     config = Config.ModelConfig()
-    config.print_info()
     arg = config.arg
 
     vocab_dict = load_vocab(arg.vocab_path)
@@ -140,12 +152,8 @@ if __name__ == '__main__':
 
     arg.n_classes = len(CATEGORIE_ID)
 
-    log_file_dir, log_file_prefix = os.path.split(arg.log_path)
-    if not os.path.exists(log_file_dir):
-        os.makedirs(log_file_dir)
-
     dt = datetime.now().strftime("%Y_%m_%d_%H_%M_%S")
-    arg.log_path += '.{}'.format(dt)
+    arg.log_path = 'config/log/log.{}'.format(dt)
     log = open(arg.log_path, 'w')
     print_log('CMD : python3 {0}'.format(' '.join(sys.argv)), file = log)
     print_log('Training with following options :', file = log)

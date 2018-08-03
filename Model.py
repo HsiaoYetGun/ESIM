@@ -79,7 +79,7 @@ class ESIM(object):
         return logits
 
     # feed forward unit
-    def _feedForwardBlock(self, inputs, num_units, scope, isReuse = False, initializer = None):
+    def _feedForwardBlock(self, inputs, hidden_dims, num_units, scope, isReuse = False, initializer = None):
         """
         :param inputs: tensor with shape (batch_size, 4 * 2 * hidden_size)
         :param scope: scope name
@@ -89,10 +89,13 @@ class ESIM(object):
             if initializer is None:
                 initializer = tf.random_normal_initializer(0.0, 0.1)
 
-            with tf.variable_scope('feed_foward_layer'):
+            with tf.variable_scope('feed_foward_layer1'):
                 inputs = tf.nn.dropout(inputs, self.dropout_keep_prob)
-                output = tf.layers.dense(inputs, num_units, tf.nn.tanh, kernel_initializer = initializer)
-                return output
+                outputs = tf.layers.dense(inputs, hidden_dims, tf.nn.relu, kernel_initializer = initializer)
+            with tf.variable_scope('feed_foward_layer2'):
+                outputs = tf.nn.dropout(outputs, self.dropout_keep_prob)
+                results = tf.layers.dense(outputs, num_units, tf.nn.tanh, kernel_initializer = initializer)
+                return results
 
     # biLSTM unit
     def _biLSTMBlock(self, inputs, num_units, scope, seq_len = None, isReuse = False):
@@ -112,7 +115,7 @@ class ESIM(object):
         """
         :param scope: scope name
 
-        embeded_left, embeded_right: tensor with shape (batch_size, n_vocab, embedding_size)
+        embeded_left, embeded_right: tensor with shape (batch_size, seq_length, embedding_size)
 
         :return: a_bar: tensor with shape (batch_size, seq_length, 2 * hidden_size)
                  b_bar: tensor with shape (batch_size, seq_length, 2 * hidden_size)
@@ -226,7 +229,7 @@ class ESIM(object):
             # v = [v_{a,avg}; v_{a,max}; v_{b,avg}; v_{b_max}] (20)
             v = tf.concat([v_a_avg, v_a_max, v_b_avg, v_b_max], axis = 1)
             print_shape('v', v)
-            y_hat = self._feedForwardBlock(v, self.n_classes, 'feed_forward')
+            y_hat = self._feedForwardBlock(v, self.hidden_size, self.n_classes, 'feed_forward')
             return y_hat
 
     # calculate classification loss
