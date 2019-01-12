@@ -1,5 +1,12 @@
+# Notice
+
+There are some problems with this version code (the mask of attention weight [Model.py, line 160-170] and the mask of mean and max [Model.py, line 220-225]), please don't use this code directly!
+
+I’m too busy recently to follow this repo, and I will update this code in my winter vacation (starting from the 26th, Jan).
+
 # ESIM
-A Tensorflow implementation of Chen-Qian's **[Enhanced LSTM for Natural Language Inference](https://arxiv.org/abs/1609.06038)** from ACL 2016.
+
+A Tensorflow implementation of Chen-Qian's **[Enhanced LSTM for Natural Language Inference](https://arxiv.org/abs/1609.06038)** from ACL 2017.
 
 # Dataset
 
